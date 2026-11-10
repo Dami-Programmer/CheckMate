@@ -1,0 +1,15 @@
+source: https://www.uber.com/legal/en/document/?name=general-terms-of-use&country=united-states&lang=en
+saved: 2026-11-07
+
+[2] If Uber is able to reschedule or cancel your request, you may be charged a fee and/or may not be refunded for items that have been purchased on your behalf.
+[2] Further, Charges applicable in certain geographical areas may increase substantially during times of high demand or due to other marketplace factors.
+[2] As between you and Uber, Uber reserves the right to establish or adjust Charges for any or all services or goods obtained through the use of the Services at any time.
+[2] Charges paid by you are final and non-refundable, unless otherwise determined by Uber and the Third-Party Provider assessing the Charge.
+[2] The amount of such fee shall be determined, in Uber’s sole discretion, based on the type of damage and the severity.
+[6] Uber reserves the right to modify these Terms or its policies relating to the Services at any time, effective upon posting of an updated version of these Terms through the Services or Uber’s website.
+[7] Uber, in its sole discretion, may immediately terminate these Terms or any Services with respect to you, or generally cease offering or deny access to the Services or any portion thereof, at any time for any reason.
+[8] You and Uber agree that any dispute, claim, lawsuit, or controversy in any way arising between you and Uber will be settled by binding individual arbitration between you and Uber, and not in a court of law.
+[8] The parties expressly waive the right to have any dispute, claim, lawsuit, or controversy brought, heard, administered, resolved, or arbitrated as a class, collective, coordinated, consolidated, and/or representative action, and neither an arbitrator nor an arbitration provider shall have any authority to hear, arbitrate, or administer any class, collective, coordinated, consolidated, and/or representative action, or to award relief to anyone but the individual in arbitration.
+[11] If your selected payment method is expired, invalid or otherwise not able to be charged, you agree that Uber may charge any other available payment method saved in your wallet.
+[11] You also authorize us to further debit or credit your bank account to correct any erroneous debits, make adjustments to your payment, or issue a refund back to your bank account.
+[11] In the event that a Repair or Cleaning request is verified by Uber in Uber’s reasonable discretion, Uber reserves the right to facilitate payment for the reasonable cost of such Repair or Cleaning using your payment method designated in your Account.

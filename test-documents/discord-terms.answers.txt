@@ -1,0 +1,11 @@
+source: https://discord.com/terms
+saved: 2026-11-07
+
+[4] When Discord is running, we may identify active games and other applications on your device to allow you to quickly call a friend while in a game, stream what you’re doing on your device, share your status (including what game you're playing or what song you’re listening to if you link a music account), and more.
+[5] Our rights to retain and display certain data;
+[6] If you continue to use our services after the changes have taken effect, it means that you agree to the changes.
+[7] Subject to applicable law, we reserve the right to suspend or terminate your account and/or your access to some or all of our services with or without notice, at our discretion for any reason, or for the following reasons:
+[8] Only after engaging in the Informal Dispute Resolution process set forth in these Terms, and only after those efforts fail to resolve the Dispute, then either Party may initiate binding arbitration as the sole means to resolve Disputes, subject to the terms of this Agreement to Arbitrate and the applicable arbitration rules.
+[8] You agree that any Dispute between you and Discord that for any reason is not subject to the “Agreement to Arbitrate” section below may only be pursued by you on an individual basis, and you may not bring a claim as a plaintiff or a class member in a class, collective, or representative action.
+[9] But by using our services, you grant us a license to use, reproduce, distribute, create derivative works of, display, and perform your content.
+[12] To terminate this agreement, you may delete your Discord account through the Settings page in the Discord app (the gear icon next to your username) and discontinue use of the services.

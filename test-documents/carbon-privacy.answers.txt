@@ -1,0 +1,13 @@
+source: https://www.getcarbon.co/privacy-policy
+saved: 2026-11-07
+
+[2] Any access request may be subject to a fee in providing you with details of the information we hold about you.
+[3] Where you grant consent, we may share certain information associated with your account, including your email address and phone number in a hashed form, with Google and its relevant advertising measurement tools.
+[3] We may make use of the personal data we have collected from you to enable us to comply with our advertisers’ wishes by displaying their advertisements to that target audience.
+[3] We are authorized to share, receive, and use data/information collected from your transaction with other affiliated third parties including but not limited to switching companies, mobile network operators, electricity companies, aggregators, credit bureaus, other financial institutions, e-commerce platforms, etc.
+[4] When you use our services, we collect location data which allows us to determine your precise or approximate location.
+[4] We also collect the following information saved on your smartphone:
+[5] We will retain your data for a minimum of 5 years (or such longer period as may be necessary) even after we have received a request for deletion from you in order to comply with our regulatory obligations.
+[6] We may update this policy from time to time by publishing a new version on our website.
+[10] Business partners, suppliers, and subcontractors for the performance of any contract we enter into with them or you (such as credit bureaus and debt collection agencies).
+[12] You also have the right to ask for access to the personal data that we hold, to rectify inaccurate data, or erase the personal data we hold of you.

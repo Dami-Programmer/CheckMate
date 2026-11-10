@@ -2,3 +2,7 @@ node_modules/
 .env
 dist/
 *.zip
+
+# Third-party terms documents stay local; answer files are committed
+test-documents/*.txt
+!test-documents/*.answers.txt

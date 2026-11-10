@@ -1,0 +1,13 @@
+source: https://branch.co/tou/ng
+saved: 2026-11-07
+
+[2] We may from time to time amend or vary the interest or Transaction Fees and unless otherwise stated, such changes will not be backdated.
+[2] If you fail to make any payments due to Branch at the due date for payment, Branch may apply default interest or penalties on such outstanding amount at a rate to be communicated to you.
+[3] You hereby agree and authorise Branch to obtain and procure your Personal Information and Relevant Information from relevant sources (private and official databases) and you further agree and consent to the disclosure and provision of such Personal Information by us or our Third Party Partners.
+[4] You hereby agree and authorise Branch to collect and verify information including, but not limited to, data relating to your phone (including, without limitation, your phone’s history) from your Equipment, from any SMS sent to you or by you, from any 3rd party applications, income and earnings, financial transactions, and such other information as Branch shall require for purposes of providing you the Services (the “Relevant Information”).
+[6] These Terms and Conditions may be amended or varied by Branch from time to time and your continued use of the Services constitutes your agreement to be bound by the updated or varied terms.
+[7] Branch reserves the right to provide any of the Services to you to revoke the same at any stage at Branch’s sole and absolute discretion and without assigning any reason or giving any notice thereto.
+[10] Branch reserves the right to assign its right, title and interest in the Loan and rights under the Agreement to an external collections agency, funds provider or assignee, who will take all reasonable steps to collect the outstanding Loan (together with any interest and fees accrued), and in this regard, Branch shall have the right to share with such third parties, any information about the Borrower (including transaction history, Personal Information, relevant information) which it deems relevant.
+[11] You hereby authorise us to charge any other card or accounts listed against your name on the App or with any other financial institution, after unsuccessful attempts on any of your Wallet or Card.
+[11] You consent to and authorise us to make such deductions and automated debits from your salary account and Non Branch Bank Account (s) provided to us.
+[11] Where any Loan or any amount is due and outstanding following the due date, You authorise us to deduct (without any notice to you) such amounts from any amount standing to your credit in any account domiciled with any bank or other financial institution in Nigeria.

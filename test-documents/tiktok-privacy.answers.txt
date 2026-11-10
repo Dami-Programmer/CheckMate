@@ -1,0 +1,14 @@
+source: https://www.tiktok.com/legal/page/row/privacy-policy/en
+saved: 2026-11-07
+
+[3] We share information with advertisers, advertising partners, publishers, and third-party measurement companies to show how many and which users of the Platform have viewed or clicked on an advertisement; to help advertisers understand their audience and customer feedback about their products and services; and to help publishers understand the types of ads served, so that they can measure the effectiveness and value of our advertising network services; and, to enable certain advertisers and advertising partners to bid on ad opportunities where permitted under applicable law.
+[3] These partners also share information with us, such as mobile identifiers for advertising, device information, hashed email addresses and phone numbers, cookie identifiers, information regarding your interaction with ads and conversion events, and inferences related to preferences and characteristics, which we use to help match you and your actions outside of the Platform with your TikTok account and to personalise the ads you see on and off the Platform.
+[3] We may share your email address with sellers so that they can send marketing communications to you.
+[4] If you choose to sync your phone contacts, we will access and collect information such as names, phone numbers, and email addresses, and match that information against existing users of the Platform.
+[4] With your permission, we may also collect precise location data (such as GPS).
+[4] We may access content, including text, images, and video, found in your device’s clipboard, with your permission.
+[5] We also retain information when necessary to comply with contractual and legal obligations, when we have a legitimate business interest to do so (such as improving and developing the Platform, and enhancing its safety, security and stability), and for the exercise or defence of legal claims.
+[5] However, there are occasions where we are likely to keep this data for five (5) years (or longer if required) in accordance with our legal obligations or where it is necessary for the establishment, exercise or defence of legal claims.
+[6] Your continued access to or use of the Platform after the date of the updated policy constitutes your acceptance of the updated policy.
+[8] If the dispute is not settled by mediation within 30 days of the commencement of the mediation, or such further period as the parties shall agree in writing, the dispute shall be referred to and finally resolved by arbitration under the Arbitration Rules of the DIFC-LCIA Arbitration Centre, which Rules are deemed to be incorporated by reference to this clause.
+[12] Should you choose to do so, you may delete your entire account in Settings.

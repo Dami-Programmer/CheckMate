@@ -1,0 +1,11 @@
+source: https://www.spotify.com/us/legal/end-user-agreement/
+saved: 2026-11-07
+
+[1] You will be billed on a recurring basis on the first day of each billing period and you will pay and you authorise us (or the applicable third party, if you sign up through a third party) to charge your payment method the then-current subscription fee.
+[2] Spotify may from time to time make changes to Paid Subscriptions, including recurring subscription fees, the Prepaid Period (for periods not yet paid), or Codes, and will communicate any price changes to you in advance.
+[2] Unless otherwise required by law, we do not provide refunds or credits for any partial subscription periods, except as expressly stated in these Terms.
+[3] You also grant to us the right (1) to allow the Spotify Service to use the processor, bandwidth, and storage hardware on your Device in order to facilitate the operation of the Spotify Service, and (2) to provide advertising and other information to you, and (3) to allow our business partners to do the same.
+[6] Your use of the Spotify Service following any changes to these Terms will constitute your acceptance of such changes.
+[8] Neither party may participate as a plaintiff, claimant, or class member in any class, collective, consolidated, private attorney general, or representative proceeding (whether in court or arbitration).
+[8] Subject to the exceptions set forth in the "Exceptions to arbitration" section below, you and Spotify agree that any Dispute between you and Spotify (whether based in contract, tort, statute, fraud, misrepresentation, or any other legal theory, whether the claims arose before the existence of this or any prior Arbitration Agreement, and whether the claims arise after the termination of these Terms) will be determined by binding individual (not class) arbitration.
+[9] Accordingly, you hereby grant to Spotify a non-exclusive, transferable, sublicensable, royalty-free, fully paid, irrevocable, worldwide license to reproduce, make available, perform and display, translate, modify, create derivative works from, distribute, and otherwise use any such User Content through any medium, whether alone or in combination with other Content or materials, in any manner and by any means, method or technology, whether now known or hereafter created, in connection with the Spotify Service.
