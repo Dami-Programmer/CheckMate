@@ -95,7 +95,7 @@ const fakeAnalyzer: Analyzer = {
 
     const flags: RawFlag[] = [];
     for (const t of CHECKLIST) {
-      const matches = sentences.filter((s) => FAKE_KEYWORDS[t.id].test(s)).slice(0, 2);
+      const matches = sentences.filter((s) => FAKE_KEYWORDS[t.id]?.test(s)).slice(0, 2);
       for (const quote of matches) {
         flags.push({ type: t.id, explanation: `(Fake AI) Possible "${t.name}" clause.`, quote });
       }

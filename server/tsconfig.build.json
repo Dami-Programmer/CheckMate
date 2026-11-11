@@ -1,0 +1,12 @@
+{
+  // Used by "npm run build" (on Vercel): turns src/*.ts into plain JavaScript in dist/.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": ".",
+    "sourceMap": false,
+    "declaration": false,
+    "declarationMap": false
+  },
+  "include": ["src/**/*.ts"]
+}

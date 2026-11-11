@@ -33,7 +33,7 @@ function normalizeWithMap(text: string): { norm: string; map: number[] } {
   let norm = "";
   const map: number[] = [];
   for (let i = 0; i < text.length; i++) {
-    const ch = normalizeChar(text[i]);
+    const ch = normalizeChar(text[i]!);
     if (ch === " " && norm.endsWith(" ")) continue; // collapse runs of spaces
     norm += ch;
     map.push(i);
@@ -50,7 +50,7 @@ export function findQuote(quote: string, doc: { text: string; norm: string; map:
   const start = doc.norm.indexOf(q);
   if (start === -1) return null;
   const from = doc.map[start];
-  const to = doc.map[start + q.length - 1] + 1;
+  const to = doc.map[start + q.length - 1]! + 1;
   return doc.text.slice(from, to);
 }
 
@@ -73,7 +73,7 @@ export function verifyFlags(rawFlags: RawFlag[], text: string): Flag[] {
       (k) => k.type === raw.type && (normalize(k.quote).includes(normalize(exact)) || normalize(exact).includes(normalize(k.quote)))
     );
     if (overlapIndex !== -1) {
-      if (exact.length > kept[overlapIndex].quote.length) kept[overlapIndex].quote = exact;
+      if (exact.length > kept[overlapIndex]!.quote.length) kept[overlapIndex]!.quote = exact;
       continue;
     }
 

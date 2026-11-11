@@ -32,7 +32,7 @@ export function parseAnswers(fileText: string): Answer[] {
     .split(/\r?\n/)
     .map((line) => line.match(/^\[(\d+)\]\s+(.+)$/))
     .filter((m): m is RegExpMatchArray => m !== null)
-    .map((m) => ({ type: Number(m[1]), quote: m[2].trim() }));
+    .map((m) => ({ type: Number(m[1]), quote: m[2]!.trim() }));
 }
 
 const wordsOf = (s: string) =>

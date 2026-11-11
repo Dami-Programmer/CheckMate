@@ -49,10 +49,10 @@ export function chunkText(text: string, options: ChunkOptions = {}): string[] {
       const overlap: string[] = [];
       let overlapCount = 0;
       for (let i = current.length - 1; i >= 0 && overlapCount < overlapWords; i--) {
-        const w = countWords(current[i]);
+        const w = countWords(current[i]!);
         if (overlapCount + w > overlapWords && overlap.length > 0) break;
         if (w > overlapWords) break; // a single huge paragraph is too big to repeat
-        overlap.unshift(current[i]);
+        overlap.unshift(current[i]!);
         overlapCount += w;
       }
       current = overlap;

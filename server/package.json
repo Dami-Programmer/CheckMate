@@ -4,8 +4,11 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "accuracy": "tsx scripts/accuracy.ts"
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsx watch --env-file=.env src/index.ts",
+    "accuracy": "tsx --env-file=.env scripts/accuracy.ts",
+    "db:setup": "tsx --env-file=.env scripts/db-setup.ts",
+    "invite": "tsx --env-file=.env scripts/invite.ts"
   },
   "keywords": [],
   "author": "",
@@ -13,11 +16,16 @@
   "description": "",
   "dependencies": {
     "@fastify/cors": "^11.4.1",
-    "fastify": "^5.12.8"
+    "fastify": "^5.12.8",
+    "pg": "^8.23.1"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
+    "@types/pg": "^8.23.1",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
+  },
+  "engines": {
+    "node": "22.x"
   }
 }
