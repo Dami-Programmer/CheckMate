@@ -6,3 +6,6 @@ dist/
 # Third-party terms documents stay local; answer files are committed
 test-documents/*.txt
 !test-documents/*.answers.txt
+
+# Local Claude Code settings
+.claude/

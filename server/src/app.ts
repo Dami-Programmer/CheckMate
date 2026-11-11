@@ -4,7 +4,7 @@ import { AnalysisError } from "./analyze.js";
 import { requireInvite } from "./auth.js";
 import { analyzeWithCache } from "./cache.js";
 import { checkDb } from "./db.js";
-import { LimitError, releaseScan, reserveScan } from "./limits.js";
+import { LimitError, releaseScan, reserveScan, scansLeftToday, USER_DAILY_LIMIT } from "./limits.js";
 import { MAX_NOTE_LENGTH, ReportError, saveReport, type ReportInput } from "./reports.js";
 
 // All the routes. Started by src/index.ts on your computer, and by api/index.js on Vercel.
@@ -24,6 +24,12 @@ app.get("/version", async () => {
 app.get("/health", async (_request, reply) => {
   const db = await checkDb();
   return reply.code(db ? 200 : 503).send({ server: "ok", database: db ? "ok" : "unavailable" });
+});
+
+// Checks an invite code (used by the welcome screen) and shows today's scans left.
+app.get("/me", { preHandler: requireInvite }, async (request) => {
+  const user = request.user!;
+  return { name: user.name, dailyLimit: USER_DAILY_LIMIT, scansLeftToday: await scansLeftToday(user.id) };
 });
 
 interface AnalyzeBody {

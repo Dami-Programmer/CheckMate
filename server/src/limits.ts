@@ -51,6 +51,15 @@ export async function reserveScan(userId: number): Promise<void> {
   }
 }
 
+// How many new scans this person has left today (shown in the popup).
+export async function scansLeftToday(userId: number): Promise<number> {
+  const r = await query<{ new_analyses: number }>(
+    "SELECT new_analyses FROM usage WHERE user_id = $1 AND date = CURRENT_DATE",
+    [userId]
+  );
+  return Math.max(0, USER_DAILY_LIMIT - (r.rows[0]?.new_analyses ?? 0));
+}
+
 // Gives the slot back when a scan fails (e.g. the page was too short).
 export async function releaseScan(userId: number): Promise<void> {
   await query(
