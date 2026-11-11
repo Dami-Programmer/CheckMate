@@ -34,3 +34,25 @@ async function request<T>(path: string, code: string, init: RequestInit = {}, ti
 }
 
 export const getMe = (code: string) => request<Me>("/me", code);
+
+export interface Flag {
+  type: number;
+  name: string;
+  color: "red" | "orange" | "green";
+  explanation: string;
+  quote: string;
+}
+
+export interface AnalyzeResult {
+  score: number;
+  label: string;
+  flags: Flag[];
+  words: number;
+  chunks: number;
+  cached: boolean;
+  analysisId: number;
+}
+
+// New scans can take 10-30 seconds with the real AI; allow up to 70.
+export const analyze = (code: string, page: { url: string; text: string }) =>
+  request<AnalyzeResult>("/analyze", code, { method: "POST", body: JSON.stringify(page) }, 70000);

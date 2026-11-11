@@ -22,7 +22,7 @@ manifest.version = pkg.version;
 writeFileSync("dist/manifest.json", JSON.stringify(manifest, null, 2));
 
 const options = {
-  entryPoints: { popup: "src/popup.ts", background: "src/background.ts" },
+  entryPoints: { popup: "src/popup.ts", background: "src/background.ts", extract: "src/extract.ts" },
   outdir: "dist",
   bundle: true,
   format: "esm",

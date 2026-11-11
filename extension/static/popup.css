@@ -89,3 +89,39 @@ button.link {
   font-size: 12px;
 }
 .error { color: var(--red); min-height: 1em; }
+.ok { color: var(--green); font-weight: 600; }
+
+/* Scanning */
+.scanning { display: flex; gap: 12px; align-items: flex-start; margin: 4px 0 12px; }
+.scanning p { margin: 0 0 4px; }
+.spinner {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  border: 3px solid var(--line);
+  border-top-color: var(--brand);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } }
+
+/* Score */
+.score-card {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 12px 14px;
+  margin: 4px 0 12px;
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--tone);
+  border-radius: 10px;
+}
+.score-card.good { --tone: var(--green); }
+.score-card.mid { --tone: var(--orange); }
+.score-card.bad { --tone: var(--red); }
+.score { color: var(--tone); line-height: 1; white-space: nowrap; }
+.score .num { font-size: 34px; font-weight: 700; }
+.score .of { font-size: 14px; font-weight: 600; margin-left: 2px; }
+.score-card .label { font-weight: 700; font-size: 15px; color: var(--tone); }
