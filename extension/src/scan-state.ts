@@ -3,7 +3,7 @@
 // it, so closing and reopening the popup never loses a scan.
 import type { AnalyzeResult } from "./api.js";
 
-export type ScanState = { url: string; title: string; startedAt: number } & (
+export type ScanState = { url: string; title: string; startedAt: number; words?: number } & (
   | { status: "scanning" }
   | { status: "done"; result: AnalyzeResult }
   | { status: "error"; error: { code: string; message: string } }

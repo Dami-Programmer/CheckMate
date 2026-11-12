@@ -22,9 +22,10 @@ manifest.version = pkg.version;
 writeFileSync("dist/manifest.json", JSON.stringify(manifest, null, 2));
 
 const options = {
-  entryPoints: { popup: "src/popup.ts", background: "src/background.ts", extract: "src/extract.ts" },
+  entryPoints: { popup: "src/popup.ts", background: "src/background.ts", extract: "src/extract.ts", panel: "src/panel.ts" },
   outdir: "dist",
   bundle: true,
+  loader: { ".css": "text", ".png": "dataurl" },
   format: "esm",
   target: "chrome120",
   define: { __SERVER_URL__: JSON.stringify(SERVER_URL), __VERSION__: JSON.stringify(pkg.version) },

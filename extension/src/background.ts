@@ -4,18 +4,27 @@ import { analyze, ApiError } from "./api.js";
 import { clearScanState, setScanState, type ScanRequest } from "./scan-state.js";
 import { getSaved } from "./storage.js";
 
+// Let the floating panel (which runs inside the page, in CheckMate's own
+// isolated script world) read scan progress. Web pages themselves still can't.
+try {
+  chrome.storage.session.setAccessLevel({ accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS" }).catch(() => {});
+} catch {
+  // very old Chrome: the panel will show "no results" instead of crashing the worker
+}
+
 chrome.runtime.onInstalled.addListener((details) => {
   console.log(`CheckMate ${chrome.runtime.getManifest().version} ${details.reason}`);
 });
 
 // Saves "scanning" for the tab, then returns `finish`, which does the actual scan.
 async function startScan({ tabId, page }: ScanRequest) {
-  const base = { url: page.url, title: page.title, startedAt: Date.now() };
+  const words = page.text.split(/\s+/).filter(Boolean).length;
+  const base = { url: page.url, title: page.title, startedAt: Date.now(), words };
   await setScanState(tabId, { ...base, status: "scanning" });
   return () => finishScan(tabId, page, base);
 }
 
-async function finishScan(tabId: number, page: ScanRequest["page"], base: { url: string; title: string; startedAt: number }) {
+async function finishScan(tabId: number, page: ScanRequest["page"], base: { url: string; title: string; startedAt: number; words: number }) {
   const saved = await getSaved();
   if (!saved) {
     await setScanState(tabId, { ...base, status: "error", error: { code: "invalid_code", message: "Please enter your invite code first." } });
