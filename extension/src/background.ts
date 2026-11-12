@@ -31,15 +31,23 @@ async function finishScan(tabId: number, page: ScanRequest["page"], base: { url:
     return;
   }
   try {
-    const result = await analyze(saved.inviteCode, { url: page.url, text: page.text });
+    // Uploads: no address is sent (the upload page's address means nothing), and the server keeps only a fingerprint.
+    const result = await analyze(saved.inviteCode, page.upload ? { text: page.text, upload: true } : { url: page.url, text: page.text });
     await setScanState(tabId, { ...base, status: "done", result });
   } catch (err) {
     const error =
       err instanceof ApiError
-        ? { code: err.code, message: err.message }
+        ? { code: err.code, message: page.upload ? documentWording(err.code, err.message) : err.message }
         : { code: "unknown", message: "Something went wrong. Please try again." };
     await setScanState(tabId, { ...base, status: "error", error });
   }
+}
+
+// The server's messages talk about "pages"; say "document" for uploads.
+function documentWording(code: string, message: string) {
+  if (code === "too_short") return "This document doesn't look like terms, a contract or a privacy policy.";
+  if (code === "too_long") return "This document is too long to check. Try uploading just the terms part.";
+  return message;
 }
 
 chrome.runtime.onMessage.addListener((msg: ScanRequest | { type: "ping" }, _sender, sendResponse) => {

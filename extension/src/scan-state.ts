@@ -24,5 +24,5 @@ export const clearScanState = (tabId: number) => chrome.storage.session.remove(s
 export interface ScanRequest {
   type: "scan";
   tabId: number;
-  page: { url: string; title: string; text: string };
+  page: { url: string; title: string; text: string; upload?: boolean }; // upload: a file from the upload page
 }

@@ -27,6 +27,10 @@ export interface ReportInput {
 export async function saveReport(userId: number, input: ReportInput): Promise<{ id: number; duplicate: boolean }> {
   const analysis = await query<{ flags: Flag[] }>("SELECT flags FROM analyses WHERE id = $1", [input.analysisId]);
   const flags = analysis.rows[0]?.flags;
+  if (flags && !Array.isArray(flags)) {
+    // a private upload: its findings are locked, and a report would copy a quote out of it
+    throw new ReportError("analysis_not_found", 404, "Reports aren't available for uploaded documents.");
+  }
   if (!flags) {
     throw new ReportError("analysis_not_found", 404, "That result no longer exists. Scan the page again and retry.");
   }

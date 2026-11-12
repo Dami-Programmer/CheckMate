@@ -42,16 +42,17 @@ const STEPS: StepDef[] = [
   {
     pill: "Reading",
     text: ({ title, words }) => [
-      "Reading page",
-      h("span", { class: "quote-title" }, "“", h("span", { class: "favi" }, (title.trim()[0] ?? "C").toUpperCase()), h("span", { class: "t" }, title || "this page"), "”"),
+      `Reading ${WHAT()}`,
+      h("span", { class: "quote-title" }, "“", h("span", { class: "favi" }, (title.trim()[0] ?? "C").toUpperCase()), h("span", { class: "t" }, title || `this ${WHAT()}`), "”"),
       words ? h("span", { class: "meta" }, `${words.toLocaleString()} words`) : "",
     ],
   },
   { pill: "Sending", text: () => ["Sending it to CheckMate…"] },
   { pill: "Checking", text: () => ["Checking for 12 kinds of risky clauses…"] },
-  { pill: "Verifying", text: () => ["Double-checking every quote against the page…"] },
+  { pill: "Verifying", text: () => [`Double-checking every quote against the ${WHAT()}…`] },
   { pill: "Scoring", text: () => ["Scoring the terms…"] },
 ];
+const WHAT = () => ((globalThis as any).__checkmateDoc ? "document" : "page"); // the upload page sets __checkmateDoc
 const OPEN_AT = [0, 450, 1200, 2100]; // ms after the scan started; steps 4-5 wait for the result
 const WAIT_STEP = 3; // the step that stays active while the server works
 
@@ -98,7 +99,8 @@ function outcomeBox(tag: string, body: string, tone: "" | "error" = "", action?:
 function flagCard(g: FlagGroup, first: number, items: HighlightItem[], i: number) {
   const n = g.quotes.length;
   let next = 0;
-  const label = () => (n === 1 ? "Show on page" : `Show on page (${next + 1} of ${n})`);
+  const where = WHAT() === "document" ? "Show in document" : "Show on page";
+  const label = () => (n === 1 ? where : `${where} (${next + 1} of ${n})`);
   const button = h("button", { type: "button", class: "show-on-page" }, label());
   const note = h("div", { class: "flag-note", ariaLive: "polite" });
   button.addEventListener("click", () => {
@@ -112,8 +114,8 @@ function flagCard(g: FlagGroup, first: number, items: HighlightItem[], i: number
         "p",
         { class: "muted small" },
         r.focus === "hidden"
-          ? "This part is hidden on the page (maybe inside a closed section). Here are the exact words:"
-          : "Couldn't find this on the page (it may have changed since the scan). Here are the exact words:"
+          ? `This part is hidden on the ${WHAT()} (maybe inside a closed section). Here are the exact words:`
+          : `Couldn't find this on the ${WHAT()} (it may have changed since the scan). Here are the exact words:`
       ),
       h("blockquote", {}, `“${g.quotes[at]}”`)
     );
@@ -483,7 +485,7 @@ async function open(tabId: number) {
     if (!state) {
       resetSteps();
       setPill("Ready", "idle");
-      outcome.replaceChildren(outcomeBox("Ready", "No results for this page yet. Click the CheckMate icon and press “Scan this page”."));
+      outcome.replaceChildren(outcomeBox("Ready", (globalThis as any).__checkmateDoc ? "No results for this document yet. Upload it again to check it." : "No results for this page yet. Click the CheckMate icon and press “Scan this page”."));
       outcome.hidden = false;
       phase = "none";
     } else if (state.status === "scanning") {

@@ -20,9 +20,11 @@ cpSync("static", "dist", { recursive: true });
 const manifest = JSON.parse(readFileSync("static/manifest.json", "utf8"));
 manifest.version = pkg.version;
 writeFileSync("dist/manifest.json", JSON.stringify(manifest, null, 2));
+// pdf.js reads PDFs in a background worker; it must ship inside the extension.
+cpSync("node_modules/pdfjs-dist/build/pdf.worker.min.mjs", "dist/pdf.worker.js");
 
 const options = {
-  entryPoints: { popup: "src/popup.ts", background: "src/background.ts", extract: "src/extract.ts", panel: "src/panel.ts" },
+  entryPoints: { popup: "src/popup.ts", background: "src/background.ts", extract: "src/extract.ts", panel: "src/panel.ts", upload: "src/upload.ts" },
   outdir: "dist",
   bundle: true,
   loader: { ".css": "text", ".png": "dataurl" },

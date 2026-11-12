@@ -35,6 +35,7 @@ app.get("/me", { preHandler: requireInvite }, async (request) => {
 interface AnalyzeBody {
   url?: string;
   text: string;
+  upload?: boolean; // a file the person uploaded: keep only its fingerprint, never its text
 }
 
 app.post<{ Body: AnalyzeBody }>(
@@ -48,6 +49,7 @@ app.post<{ Body: AnalyzeBody }>(
         properties: {
           url: { type: "string" },
           text: { type: "string" },
+          upload: { type: "boolean" },
         },
       },
     },
@@ -55,10 +57,13 @@ app.post<{ Body: AnalyzeBody }>(
   async (request, reply) => {
     try {
       const userId = request.user!.id;
-      return await analyzeWithCache(request.body.text, request.body.url, {
-        beforeNewScan: () => reserveScan(userId),
-        onNewScanFailed: () => releaseScan(userId),
-      });
+      const upload = request.body.upload === true;
+      return await analyzeWithCache(
+        request.body.text,
+        upload ? undefined : request.body.url,
+        { beforeNewScan: () => reserveScan(userId), onNewScanFailed: () => releaseScan(userId) },
+        { keepText: !upload }
+      );
     } catch (err) {
       if (err instanceof LimitError) {
         return reply.code(err.status).send({ error: err.code, message: err.message });

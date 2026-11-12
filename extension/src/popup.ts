@@ -24,6 +24,7 @@ const ICONS = {
   lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
   panel: '<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M15 4v16"/>',
   refresh: '<path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/>',
+  upload: '<path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M20 15v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4"/>',
   logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>',
 } as const;
 type IconName = keyof typeof ICONS;
@@ -179,6 +180,14 @@ const isScannable = (url?: string) => {
   return true;
 };
 
+// The "Upload a document" page opens in its own tab.
+const uploadUrl = () => chrome.runtime.getURL?.("upload.html") ?? "/upload.html";
+const isUploadPage = (url?: string) => !!url && url.startsWith(uploadUrl());
+async function openUpload() {
+  await chrome.tabs.create({ url: uploadUrl() });
+  window.close();
+}
+
 function pageCard(tab: chrome.tabs.Tab | undefined, scannable: boolean, extra: Node[] = [], tone = "") {
   const host = hostOf(tab?.url);
   const title = tab?.title?.trim() || host || "This page";
@@ -194,7 +203,7 @@ function pageCard(tab: chrome.tabs.Tab | undefined, scannable: boolean, extra: N
     h("div", { class: "page" }, fav, h("div", { style: "min-width:0" }, h("p", { class: "page-title" }, title), ...(host ? [h("p", { class: "page-host" }, host)] : []))),
     ...(scannable
       ? []
-      : [h("div", { class: "page-note" }, icon("lock"), h("span", {}, "Chrome’s own pages can’t be read by extensions. Open a terms or privacy page to scan it."))]),
+      : [h("div", { class: "page-note" }, icon("lock"), h("span", {}, isUploadPage(tab?.url) ? "This is CheckMate’s upload page. Your results are in the panel on the page." : "Chrome’s own pages can’t be read by extensions. Open a terms page, or use the upload button (top right) to check a file."))]),
     ...extra
   );
 }
@@ -340,13 +349,15 @@ function showHome(saved: Saved, initialMe?: Me): Home {
   };
 
   const header = () => {
-    const chip = h("button", { type: "button", class: "acct", ariaHasPopup: "menu", ariaExpanded: String(menuOpen), ariaLabel: `Account: ${name}` }, h("span", { class: "avatar" }, (firstName()[0] ?? "?").toUpperCase()), firstName(), icon("chevron"));
+    const chip = h("button", { type: "button", class: "acct", ariaHasPopup: "menu", ariaExpanded: String(menuOpen), ariaLabel: `Account: ${name}` }, h("span", { class: "avatar" }, (firstName()[0] ?? "?").toUpperCase()), h("span", { class: "acct-name" }, firstName()), icon("chevron"));
     chip.addEventListener("click", () => {
       menuOpen = !menuOpen;
       draw();
       if (menuOpen) (app.querySelector(".menu-item") as HTMLElement | null)?.focus();
     });
-    const top = h("header", { class: "top" }, brand(), chip);
+    const upload = h("button", { type: "button", class: "hdr-btn", title: "Upload a document (PDF, Word or text)", ariaLabel: "Upload a document" }, icon("upload"));
+    upload.addEventListener("click", openUpload);
+    const top = h("header", { class: "top" }, brand(), h("div", { class: "top-right" }, upload, chip));
     if (menuOpen) {
       const item = h("button", { type: "button", class: "menu-item", role: "menuitem" }, icon("logout"), "Use a different code");
       item.addEventListener("click", changeCode);

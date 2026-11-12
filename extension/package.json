@@ -1,6 +1,6 @@
 {
   "name": "checkmate-extension",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -19,6 +19,8 @@
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "@mozilla/readability": "^0.6.0"
+    "@mozilla/readability": "^0.6.0",
+    "fflate": "^0.8.3",
+    "pdfjs-dist": "^6.5.438"
   }
 }

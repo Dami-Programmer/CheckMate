@@ -54,5 +54,6 @@ export interface AnalyzeResult {
 }
 
 // New scans can take 10-30 seconds with the real AI; allow up to 70.
-export const analyze = (code: string, page: { url: string; text: string }) =>
+// upload: true asks the server not to keep the text (it may be a private contract).
+export const analyze = (code: string, page: { url?: string; text: string; upload?: boolean }) =>
   request<AnalyzeResult>("/analyze", code, { method: "POST", body: JSON.stringify(page) }, 70000);
