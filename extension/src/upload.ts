@@ -2,6 +2,8 @@
 // The file is read right here in the browser; only its text is sent to be
 // checked. The text is shown on the page and the floating panel (the same one
 // used on websites) shows results, highlights and "Explain simply" on it.
+import { ApiError, forgetDocument } from "./api.js";
+import { PRIVACY_URL } from "./config.js";
 import { DocError, readDocument, type DocText } from "./docs.js";
 import { createMascot } from "./mascot.js";
 import mascotCss from "./mascot.css";
@@ -21,6 +23,7 @@ const ICONS = {
   file: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/>',
   lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
   alert: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/>',
+  trash: '<path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M9 7V4h6v3"/>',
   panel: '<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M15 4v16"/>',
 } as const;
 function icon(name: keyof typeof ICONS) {
@@ -45,7 +48,7 @@ const pageList = (pages: number[]) => {
 };
 
 // ---------- Screen 1: pick a file ----------
-function showPick(error = "") {
+function showPick(error = "", notice = "") {
   busy = false;
   stopWatching();
   document.title = "Upload a document · CheckMate";
@@ -84,7 +87,8 @@ function showPick(error = "") {
       drop,
       h("p", { class: "fit" }, h("b", {}, "Works best with "), "terms of service, privacy policies, subscriptions, and loan or credit agreements. Other contracts (jobs, rentals, NDAs) can be checked too, but CheckMate may miss risks that are special to them."),
       error ? h("div", { class: "problem", role: "alert" }, icon("alert"), h("p", {}, error)) : "",
-      h("p", { class: "privacy" }, icon("lock"), h("span", {}, "Your file never leaves your computer. CheckMate reads it here and only its text is checked; uploaded text isn’t kept.")),
+      notice ? h("div", { class: "notice", role: "status" }, icon("check"), h("p", {}, notice)) : "",
+      h("p", { class: "privacy" }, icon("lock"), h("span", {}, "Your file never leaves your computer. CheckMate reads it here and only its text is checked; uploaded text isn’t kept. ", h("a", { href: PRIVACY_URL, target: "_blank", rel: "noopener" }, "Privacy & your data"))),
       h("p", { class: "legal" }, "This explains the terms; it is not legal advice.")
     )
   );
@@ -124,6 +128,9 @@ function showDoc(doc: DocText) {
   document.title = `${doc.name} · CheckMate`;
   const again = btn("Upload another", "secondary", "upload");
   again.addEventListener("click", () => showPick());
+  const forget = btn("Forget this document", "secondary", "trash");
+  forget.title = "Remove this document's record from CheckMate";
+  forget.addEventListener("click", () => forgetIt(doc, forget));
   const results = btn("Show results", "primary", "panel");
   results.addEventListener("click", () => tabId !== undefined && panel().open(tabId));
   const ext = doc.type === "PDF" ? "PDF" : doc.type === "Word" ? "DOCX" : "TXT";
@@ -136,7 +143,7 @@ function showDoc(doc: DocText) {
     h(
       "main",
       { class: "reader" },
-      h("section", { class: "doc-head" }, h("span", { class: `ftype ftype-${ext.toLowerCase()}` }, ext), h("div", { class: "doc-id" }, h("p", { class: "doc-name" }, doc.name), h("p", { class: "doc-meta" }, meta)), h("div", { class: "doc-actions" }, again, results)),
+      h("section", { class: "doc-head" }, h("span", { class: `ftype ftype-${ext.toLowerCase()}` }, ext), h("div", { class: "doc-id" }, h("p", { class: "doc-name" }, doc.name), h("p", { class: "doc-meta" }, meta)), h("div", { class: "doc-actions" }, forget, again, results)),
       readCheck(doc),
       paper
     )
@@ -170,6 +177,24 @@ function readCheck(doc: DocText) {
   chrome.storage.onChanged.addListener(onChange);
   stopWatching = () => chrome.storage.onChanged.removeListener(onChange);
   return box;
+}
+
+// "Forget this document": the server removes the record it kept for this upload (fingerprint + locked findings),
+// and the page clears the document and its results.
+async function forgetIt(doc: DocText, button: HTMLButtonElement) {
+  if (!window.confirm(`Forget “${doc.name}”?\n\nCheckMate will delete the record it kept for this document and clear it from this page. Your file on your computer isn’t touched.`)) return;
+  button.disabled = true;
+  button.textContent = "Forgetting…";
+  const saved = await getSaved();
+  try {
+    if (saved) await forgetDocument(saved.inviteCode, doc.text);
+    if (tabId !== undefined) await clearScanState(tabId);
+    showPick("", `“${doc.name}” is forgotten. CheckMate no longer has a record of it.`);
+  } catch (err) {
+    button.disabled = false;
+    button.textContent = "Forget this document";
+    window.alert(err instanceof ApiError ? err.message : "Couldn't reach CheckMate. Please try again.");
+  }
 }
 
 async function scan(doc: DocText) {

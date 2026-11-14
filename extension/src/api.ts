@@ -58,6 +58,14 @@ export interface AnalyzeResult {
 export const report = (code: string, body: { analysisId: number; flag: { type: number; quote: string }; note?: string }) =>
   request<{ ok: true; id: number; duplicate: boolean }>("/report", code, { method: "POST", body: JSON.stringify(body) });
 
+// "Delete my data": removes this person's reports and past scan history on the server.
+export const deleteMyData = (code: string) =>
+  request<{ ok: true; deleted: { reports: number; days: number } }>("/me/delete", code, { method: "POST", body: "{}" });
+
+// "Forget this document": the server finds the upload's record by the text's fingerprint and removes it.
+export const forgetDocument = (code: string, text: string) =>
+  request<{ ok: true; forgotten: boolean }>("/forget", code, { method: "POST", body: JSON.stringify({ text }) }, 30000);
+
 // upload: true asks the server not to keep the text (it may be a private contract).
 export const analyze = (code: string, page: { url?: string; text: string; upload?: boolean }) =>
   request<AnalyzeResult>("/analyze", code, { method: "POST", body: JSON.stringify(page) }, 70000);

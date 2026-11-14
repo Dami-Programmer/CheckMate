@@ -138,6 +138,18 @@ svg.i { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor;
 .menu-item { display: flex; width: 100%; align-items: center; gap: 9px; padding: 9px 10px; font-size: 13.5px; font-weight: 500; text-align: left; background: none; border: 0; border-radius: 9px; }
 .menu-item:hover, .menu-item:focus-visible { background: #f4f4f2; outline-offset: -2px; }
 .menu-item svg.i { width: 16px; height: 16px; color: var(--muted); }
+.menu-sep { height: 1px; margin: 6px 4px; background: var(--line); }
+.menu-item.danger { color: var(--red-ink); }
+.menu-item.danger svg.i { color: var(--red-ink); }
+.menu-item.danger:hover, .menu-item.danger:focus-visible { background: var(--red-bg); }
+.btn.btn-danger { background: var(--red-ink); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 2px rgba(127, 29, 29, 0.25), 0 8px 18px -8px rgba(185, 28, 28, 0.55); }
+.btn.btn-danger:hover:not(:disabled) { background: #991b1b; }
+.btn.btn-danger svg.i { color: #fff; }
+[hidden] { display: none !important; }
+.ticks { margin: 10px 0 12px; padding: 0; list-style: none; }
+.ticks li { position: relative; margin: 0 0 6px; padding-left: 22px; font-size: 13.5px; color: var(--ink); }
+.ticks li::before { content: ""; position: absolute; left: 4px; top: 7px; width: 7px; height: 7px; border-radius: 50%; background: var(--red-ink); }
+.text-link { display: inline-block; margin-top: 10px; font-size: 13px; font-weight: 550; color: var(--green-ink); text-underline-offset: 3px; }
 
 /* ---------- Body ---------- */
 .main { display: flex; flex-direction: column; gap: 12px; padding: 12px 18px 4px; }

@@ -145,6 +145,9 @@ h1 { margin: 16px 0 10px; font-size: 40px; font-weight: 650; line-height: 1.08; 
   animation: rise 0.3s ease-out both;
 }
 .problem svg.i { margin-top: 1px; color: #dc2626; }
+.notice { display: flex; gap: 11px; margin-top: 16px; padding: 13px 16px; color: #14532d; font-size: 14px; line-height: 1.45; text-align: left; background: #f0fdf4; border-radius: 20px; box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.2), 0 10px 24px -12px rgba(22, 163, 74, 0.25); animation: rise 0.3s ease-out both; }
+.notice svg.i { margin-top: 1px; color: var(--green-ink); }
+.privacy a { color: var(--green-ink); font-weight: 550; text-underline-offset: 3px; }
 .privacy { display: flex; justify-content: center; gap: 8px; margin: 22px auto 0; max-width: 470px; color: var(--muted); font-size: 13px; text-align: left; }
 .privacy svg.i { width: 16px; height: 16px; margin-top: 2px; color: var(--green-ink); }
 .legal { margin-top: 10px; color: var(--muted); font-size: 12px; }

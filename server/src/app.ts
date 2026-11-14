@@ -2,7 +2,9 @@ import cors from "@fastify/cors";
 import Fastify from "fastify";
 import { AnalysisError } from "./analyze.js";
 import { requireInvite } from "./auth.js";
-import { analyzeWithCache } from "./cache.js";
+import { analyzeWithCache, hashText } from "./cache.js";
+import { cleanText } from "./clean.js";
+import { cleanUpIfDue, deleteUserData, forgetUpload } from "./retention.js";
 import { checkDb } from "./db.js";
 import { LimitError, releaseScan, reserveScan, scansLeftToday, USER_DAILY_LIMIT } from "./limits.js";
 import { MAX_NOTE_LENGTH, ReportError, saveReport, type ReportInput } from "./reports.js";
@@ -29,6 +31,7 @@ app.get("/health", async (_request, reply) => {
 // Checks an invite code (used by the welcome screen) and shows today's scans left.
 app.get("/me", { preHandler: requireInvite }, async (request) => {
   const user = request.user!;
+  await cleanUpIfDue(); // deletes old data on schedule (see retention.ts); never throws
   return { name: user.name, dailyLimit: USER_DAILY_LIMIT, scansLeftToday: await scansLeftToday(user.id) };
 });
 
@@ -73,6 +76,24 @@ app.post<{ Body: AnalyzeBody }>(
       }
       throw err; // anything else becomes a 500 and is logged
     }
+  }
+);
+
+// "Delete my data": this person's reports and past scan history.
+app.post("/me/delete", { preHandler: requireInvite }, async (request) => {
+  return { ok: true, deleted: await deleteUserData(request.user!.id) };
+});
+
+// "Forget this document" on the upload page. The extension sends the document's text again;
+// only its fingerprint is used to find the record, and the text isn't stored.
+app.post<{ Body: { text: string } }>(
+  "/forget",
+  {
+    preHandler: requireInvite,
+    schema: { body: { type: "object", required: ["text"], properties: { text: { type: "string", minLength: 1 } } } },
+  },
+  async (request) => {
+    return { ok: true, forgotten: await forgetUpload(hashText(cleanText(request.body.text))) };
   }
 );
 

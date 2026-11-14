@@ -1,7 +1,7 @@
 // The popup: sign in, scan the current page, or bring back the floating results panel.
 // Results themselves appear in the floating panel on the page (panel.ts).
-import { ApiError, getMe, type AnalyzeResult, type Me } from "./api.js";
-import { VERSION } from "./config.js";
+import { ApiError, deleteMyData, getMe, type AnalyzeResult, type Me } from "./api.js";
+import { PRIVACY_URL, VERSION } from "./config.js";
 import { createMascot } from "./mascot.js";
 import mascotCss from "./mascot.css";
 import { PageError, readCurrentPage } from "./page.js";
@@ -25,6 +25,8 @@ const ICONS = {
   panel: '<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M15 4v16"/>',
   refresh: '<path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/>',
   upload: '<path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M20 15v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4"/>',
+  shield: '<path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
+  trash: '<path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M9 7V4h6v3"/>',
   logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>',
 } as const;
 type IconName = keyof typeof ICONS;
@@ -361,12 +363,22 @@ function showHome(saved: Saved, initialMe?: Me): Home {
     if (menuOpen) {
       const item = h("button", { type: "button", class: "menu-item", role: "menuitem" }, icon("logout"), "Use a different code");
       item.addEventListener("click", changeCode);
+      const privacy = h("button", { type: "button", class: "menu-item", role: "menuitem" }, icon("shield"), "Privacy & your data");
+      privacy.addEventListener("click", async () => {
+        await chrome.tabs.create({ url: PRIVACY_URL });
+        window.close();
+      });
+      const del = h("button", { type: "button", class: "menu-item danger", role: "menuitem" }, icon("trash"), "Delete my data");
+      del.addEventListener("click", () => showDeleteData(saved));
       top.append(
         h(
           "div",
           { class: "menu", role: "menu", ariaLabel: "Account" },
           h("div", { class: "menu-head" }, h("p", { class: "menu-name" }, name || "Signed in"), h("p", { class: "menu-sub" }, "Signed in with an invite code")),
-          item
+          privacy,
+          item,
+          h("div", { class: "menu-sep", role: "separator" }),
+          del
         )
       );
     }
@@ -466,6 +478,83 @@ function showHome(saved: Saved, initialMe?: Me): Home {
 }
 
 // ---------- "Reload needed" screen ----------
+// ---------- "Delete my data" ----------
+function showDeleteData(saved: Saved) {
+  screen++;
+  const mine = screen;
+  const back = button("Cancel", "secondary", { onClick: () => void start() });
+  const confirm = button("Delete my data", "primary", { icon: "trash" });
+  confirm.classList.add("btn-danger");
+  const error = h("div", { class: "problem", role: "alert", hidden: true });
+  confirm.addEventListener("click", async () => {
+    confirm.disabled = back.disabled = true;
+    confirm.textContent = "Deleting…";
+    error.hidden = true;
+    try {
+      const { deleted } = await deleteMyData(saved.inviteCode);
+      // ...and what CheckMate saved in this browser: scan results and the panel's position (you stay signed in).
+      try {
+        await chrome.storage.session.clear();
+        await chrome.storage.local.remove("panelPos");
+      } catch {
+        /* the server part is done; leftovers in this browser go when the browser closes */
+      }
+      if (mine !== screen) return;
+      showDeleted(deleted);
+    } catch (err) {
+      if (mine !== screen) return;
+      confirm.disabled = back.disabled = false;
+      confirm.replaceChildren(icon("trash"), "Delete my data");
+      error.replaceChildren(icon("alert"), h("p", {}, err instanceof ApiError ? err.message : "Couldn't delete right now. Please try again."));
+      error.hidden = false;
+    }
+  });
+  show(
+    ...shell(
+      bareHeader(),
+      h(
+        "section",
+        { class: "card" },
+        h("div", { class: "eyebrow" }, "Your data"),
+        h("p", { class: "card-title" }, "Delete my data?"),
+        h("p", { class: "card-sub" }, "This removes, for good:"),
+        h(
+          "ul",
+          { class: "ticks" },
+          h("li", {}, "Your “This flag is wrong” reports"),
+          h("li", {}, "Your past daily scan counts"),
+          h("li", {}, "Scan results and settings saved in this browser")
+        ),
+        h("p", { class: "card-sub" }, "You stay signed in. Today’s scan count is kept until it clears itself, so the daily limit stays fair. Pages you scanned were never linked to you."),
+        h("a", { class: "text-link", href: PRIVACY_URL, target: "_blank", rel: "noopener" }, "What CheckMate keeps, and for how long")
+      ),
+      error,
+      h("div", { class: "actions" }, confirm, back)
+    )
+  );
+  back.focus();
+}
+
+function showDeleted(deleted: { reports: number; days: number }) {
+  screen++;
+  const done = button("Done", "primary", { wide: true, onClick: () => void start() });
+  const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+  show(
+    ...shell(
+      bareHeader(),
+      h(
+        "section",
+        { class: "card" },
+        h("div", { class: "eyebrow" }, h("span", { class: "dot" }), "Done"),
+        h("p", { class: "card-title" }, "Your data is deleted"),
+        h("p", { class: "card-sub" }, `Removed ${plural(deleted.reports, "report", "reports")} and ${plural(deleted.days, "day", "days")} of scan history, plus everything CheckMate saved in this browser.`)
+      ),
+      h("div", { class: "actions" }, done)
+    )
+  );
+  done.focus();
+}
+
 function showReload() {
   screen++;
   show(

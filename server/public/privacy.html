@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy &amp; your data · CheckMate</title>
+    <meta name="description" content="What CheckMate keeps, for how long, and how to delete it." />
+    <style>
+      :root { color-scheme: light; --ink: #0a0a0a; --text: #404040; --muted: #6b6b6b; --green: #15803d; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        color: var(--text);
+        font: 16px/1.7 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        background: radial-gradient(90% 40% at 50% -10%, #e4f8cd 0%, rgba(228, 248, 205, 0) 62%), #fafaf9;
+      }
+      main { max-width: 720px; margin: 0 auto; padding: 48px 20px 80px; }
+      .brand { display: flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 650; letter-spacing: -0.03em; color: var(--ink); }
+      .logo { width: 32px; height: 32px; display: grid; place-items: center; color: #fff; font-weight: 800; border-radius: 10px; background: linear-gradient(180deg, #3bd982, #16a34a); }
+      h1 { margin: 28px 0 6px; font-size: 38px; line-height: 1.1; letter-spacing: -0.04em; color: var(--ink); }
+      .updated { color: var(--muted); font-size: 14px; }
+      .card {
+        margin-top: 22px;
+        padding: 26px 28px;
+        background: #fff;
+        border-radius: 24px;
+        box-shadow: 0 0 0 1px rgba(10, 10, 10, 0.035), 0 3px 6px -2px rgba(10, 10, 10, 0.035), 0 10px 20px -6px rgba(10, 10, 10, 0.05), 0 24px 44px -14px rgba(10, 10, 10, 0.09);
+      }
+      h2 { margin: 0 0 10px; font-size: 19px; letter-spacing: -0.02em; color: var(--ink); }
+      p { margin: 0 0 10px; }
+      ul { margin: 6px 0 0; padding-left: 20px; }
+      li { margin: 0 0 6px; }
+      b { color: var(--ink); font-weight: 600; }
+      a { color: var(--green); font-weight: 600; text-underline-offset: 3px; }
+      table { width: 100%; margin-top: 6px; border-collapse: collapse; font-size: 15px; }
+      th, td { padding: 10px 8px; text-align: left; vertical-align: top; border-top: 1px solid rgba(10, 10, 10, 0.08); }
+      th { color: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; border-top: 0; }
+      .note { color: var(--muted); font-size: 14px; }
+      @media (max-width: 560px) { h1 { font-size: 30px; } .card { padding: 20px; } th, td { padding: 8px 4px; font-size: 14px; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="brand"><span class="logo" aria-hidden="true">✓</span> CheckMate</div>
+      <h1>Privacy &amp; your data</h1>
+      <p class="updated">Last updated: 14 November 2026</p>
+
+      <section class="card">
+        <h2>In short</h2>
+        <ul>
+          <li>CheckMate never sells your data and never uses it for advertising.</li>
+          <li>Uploaded files never leave your computer. Only their text is sent to be checked, and that text isn't kept.</li>
+          <li>The pages you scan aren't linked to you.</li>
+          <li>You can delete your data at any time from the CheckMate menu.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>What CheckMate keeps, and for how long</h2>
+        <table>
+          <thead><tr><th>What</th><th>Why</th><th>How long</th></tr></thead>
+          <tbody>
+            <tr><td><b>Your name and invite code</b></td><td>So you can sign in. CheckMate is invite-only.</td><td>Until your invite is removed</td></tr>
+            <tr><td><b>How many new scans you ran each day</b></td><td>For the daily scan limit.</td><td>30 days</td></tr>
+            <tr><td><b>Your “This flag is wrong” reports</b> (the flag, its quote, your note and the page address)</td><td>To find and fix mistakes.</td><td>12 months</td></tr>
+            <tr><td><b>Text of web pages you scan</b>, with the page address and the results</td><td>A shared cache: when anyone scans the same page again, the result comes back instantly and free. It is <b>not</b> linked to who scanned it.</td><td>Kept, so the cache keeps working</td></tr>
+            <tr><td><b>Uploaded documents:</b> only a fingerprint of the text, the score and the findings, stored locked</td><td>So uploading the same file again is instant and free. The findings can only be unlocked by uploading the exact same document.</td><td>90 days, or until you press “Forget this document”</td></tr>
+          </tbody>
+        </table>
+        <p class="note" style="margin-top: 12px">Because scanned page text goes into the shared cache, avoid scanning pages that show your own private information, such as a page you're signed in to that shows your account details.</p>
+      </section>
+
+      <section class="card">
+        <h2>How your documents are handled</h2>
+        <ul>
+          <li>Files you upload are opened and read <b>on your own computer</b>, in the browser. The file itself is never sent.</li>
+          <li>Only the document's text is sent, over an encrypted connection (HTTPS), to be checked. It is used for that check and then discarded.</li>
+          <li>“This flag is wrong” reports can't be sent for uploaded documents, so no quote from them is ever copied out.</li>
+          <li>Every finding comes with the exact words it's about, which are checked against your document, so nothing is made up.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Who checks the text</h2>
+        <p>Today, CheckMate's analysis runs entirely on CheckMate's own server. No outside AI company receives your text. If that changes, this page will name the company and what it receives <b>before</b> it happens, and CheckMate will never allow your text to be used to train AI models.</p>
+        <p>CheckMate's server runs on Vercel and its database on Neon, which store the data listed above for CheckMate.</p>
+      </section>
+
+      <section class="card">
+        <h2>Deleting your data</h2>
+        <ul>
+          <li><b>Your reports and scan history:</b> click the CheckMate icon, open the menu under your name, and choose <b>Delete my data</b>. Today's scan count is kept until it's cleared automatically, so the daily limit stays fair.</li>
+          <li><b>An uploaded document:</b> press <b>Forget this document</b> on the upload page while it's open.</li>
+          <li><b>Your name and invite code:</b> email <a href="mailto:newtzdesign2020@gmail.com">newtzdesign2020@gmail.com</a> and your invite, with everything linked to it, will be removed.</li>
+          <li><b>Data on your computer:</b> removing the CheckMate extension from Chrome deletes everything it saved in your browser.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Questions</h2>
+        <p>For any question or request about your data, including removing your invite and everything linked to it, email <a href="mailto:newtzdesign2020@gmail.com">newtzdesign2020@gmail.com</a>.</p>
+        <p class="note">CheckMate explains terms; it is not legal advice.</p>
+      </section>
+    </main>
+  </body>
+</html>
