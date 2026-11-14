@@ -1,7 +1,7 @@
 // Background service worker. It runs scans so they keep going even if the
 // popup closes, and saves each tab's scan state for the popup to show.
-import { analyze, ApiError } from "./api.js";
-import { clearScanState, setScanState, type ScanRequest } from "./scan-state.js";
+import { analyze, ApiError, report } from "./api.js";
+import { clearScanState, setScanState, type ReportRequest, type ReportResponse, type ScanRequest } from "./scan-state.js";
 import { getSaved } from "./storage.js";
 
 // Let the floating panel (which runs inside the page, in CheckMate's own
@@ -50,10 +50,25 @@ function documentWording(code: string, message: string) {
   return message;
 }
 
-chrome.runtime.onMessage.addListener((msg: ScanRequest | { type: "ping" }, _sender, sendResponse) => {
+async function sendReport(msg: ReportRequest): Promise<ReportResponse> {
+  const saved = await getSaved();
+  if (!saved) return { ok: false, message: "Enter your invite code first: click the CheckMate icon." };
+  try {
+    const res = await report(saved.inviteCode, { analysisId: msg.analysisId, flag: msg.flag, note: msg.note || undefined });
+    return { ok: true, duplicate: res.duplicate };
+  } catch (err) {
+    return { ok: false, message: err instanceof ApiError ? err.message : "Couldn't send it. Please try again." };
+  }
+}
+
+chrome.runtime.onMessage.addListener((msg: ScanRequest | ReportRequest | { type: "ping" }, _sender, sendResponse) => {
   if (msg?.type === "ping") {
     sendResponse({ ok: true, version: chrome.runtime.getManifest().version });
     return;
+  }
+  if (msg?.type === "report") {
+    sendReport(msg).then(sendResponse);
+    return true; // we answer asynchronously
   }
   if (msg?.type !== "scan") return;
   // Answer "started" right away so the popup knows the scan is running,

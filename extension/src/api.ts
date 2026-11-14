@@ -54,6 +54,10 @@ export interface AnalyzeResult {
 }
 
 // New scans can take 10-30 seconds with the real AI; allow up to 70.
+// "This flag is wrong": saves a report for the person who sent it. duplicate = they already reported it.
+export const report = (code: string, body: { analysisId: number; flag: { type: number; quote: string }; note?: string }) =>
+  request<{ ok: true; id: number; duplicate: boolean }>("/report", code, { method: "POST", body: JSON.stringify(body) });
+
 // upload: true asks the server not to keep the text (it may be a private contract).
 export const analyze = (code: string, page: { url?: string; text: string; upload?: boolean }) =>
   request<AnalyzeResult>("/analyze", code, { method: "POST", body: JSON.stringify(page) }, 70000);

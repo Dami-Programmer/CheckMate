@@ -168,8 +168,9 @@ h1 { margin: 16px 0 10px; font-size: 40px; font-weight: 650; line-height: 1.08; 
 .reader { padding: 8px 32px 96px; }
 .reader > * { max-width: 760px; margin-inline: auto; }
 /* leave room for the floating panel on the right when the window is wide */
+/* wide windows: room on the right for the floating panel, and on the left for the "Explain simply" buttons */
 @media (min-width: 1200px) {
-  .reader { padding-right: 420px; }
+  .reader { padding-left: 180px; padding-right: 420px; }
 }
 .doc-head { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-bottom: 18px; animation: rise 0.35s ease-out both; }
 .ftype { display: grid; place-items: center; width: 46px; height: 54px; flex: none; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: #fff; border-radius: 10px 16px 10px 10px; box-shadow: var(--float); }

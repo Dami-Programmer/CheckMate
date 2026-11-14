@@ -20,6 +20,15 @@ export async function getScanState(tabId: number): Promise<ScanState | null> {
 export const setScanState = (tabId: number, state: ScanState) => chrome.storage.session.set({ [stateKey(tabId)]: state });
 export const clearScanState = (tabId: number) => chrome.storage.session.remove(stateKey(tabId));
 
+// Message the panel sends when someone says a flag is wrong (the panel can't call the server itself).
+export interface ReportRequest {
+  type: "report";
+  analysisId: number;
+  flag: { type: number; quote: string };
+  note?: string;
+}
+export type ReportResponse = { ok: true; duplicate: boolean } | { ok: false; message: string };
+
 // Message the popup sends to the background worker.
 export interface ScanRequest {
   type: "scan";

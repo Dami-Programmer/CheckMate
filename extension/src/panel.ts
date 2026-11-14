@@ -12,7 +12,7 @@ import { createMascot, type MascotMode } from "./mascot.js";
 import { removeMarkers, setPanelBox, showMarkers, type MarkerItem } from "./markers.js";
 import mascotCss from "./mascot.css";
 import css from "./panel.css";
-import { stateKey, type ScanState } from "./scan-state.js";
+import { stateKey, type ReportRequest, type ReportResponse, type ScanState } from "./scan-state.js";
 import { applyCss, COLOR_WORDS, groupFlags, h, scoreCard, type FlagGroup } from "./ui.js";
 
 const HOST_ID = "checkmate-panel-host";
@@ -96,15 +96,17 @@ function outcomeBox(tag: string, body: string, tone: "" | "error" = "", action?:
   );
 }
 
-function flagCard(g: FlagGroup, first: number, items: HighlightItem[], i: number) {
+function flagCard(g: FlagGroup, first: number, items: HighlightItem[], i: number, analysisId?: number) {
   const n = g.quotes.length;
   let next = 0;
+  let shown = 0; // the quote last shown on the page: the one a report is about
   const where = WHAT() === "document" ? "Show in document" : "Show on page";
   const label = () => (n === 1 ? where : `${where} (${next + 1} of ${n})`);
   const button = h("button", { type: "button", class: "show-on-page" }, label());
   const note = h("div", { class: "flag-note", ariaLive: "polite" });
   button.addEventListener("click", () => {
     const at = next;
+    shown = at;
     next = (next + 1) % n;
     button.textContent = label();
     const r = highlightOnPage(items, first + at);
@@ -120,15 +122,75 @@ function flagCard(g: FlagGroup, first: number, items: HighlightItem[], i: number
       h("blockquote", {}, `“${g.quotes[at]}”`)
     );
   });
+  // "This flag is wrong". Not for uploaded documents: their findings are private, and a report would copy a quote out.
+  const wrong = analysisId && WHAT() === "page" ? reportForm(analysisId, g, () => g.quotes[shown]!) : null;
   return h(
     "li",
     { class: `flag ${g.color} drop`, style: `--i:${i}` },
     h("div", { class: "flag-head" }, h("span", { class: "dot", ariaHidden: "true" }), h("span", { class: "flag-name" }, g.name)),
     h("span", { class: "sr-only" }, `${COLOR_WORDS[g.color]}. `),
     h("p", { class: "flag-why" }, g.explanation),
-    button,
-    note
+    h("div", { class: "flag-actions" }, button, ...(wrong ? [wrong.link] : [])),
+    note,
+    ...(wrong ? [wrong.box] : [])
   );
+}
+
+// "Not right?": a small link that opens a short form inside the flag card.
+function reportForm(analysisId: number, g: FlagGroup, quote: () => string) {
+  const link = h("button", { type: "button", class: "wrong-link", ariaExpanded: "false" }, "Not right?");
+  const box = h("div", { class: "wrong", hidden: true });
+  const close = () => {
+    box.hidden = true;
+    link.ariaExpanded = "false";
+    link.focus();
+  };
+  const thanks = (text: string) => {
+    box.replaceChildren(h("p", { class: "wrong-done", role: "status" }, h("span", { class: "wrong-tick", ariaHidden: "true" }, "✓"), text));
+    link.remove(); // one report per flag is enough
+  };
+  const form = () => {
+    const field = h("textarea", { class: "wrong-note", rows: 2, maxLength: 1000, placeholder: "Optional: tell us why (e.g. the clause doesn't say this)" });
+    field.setAttribute("aria-label", `Why the “${g.name}” flag is wrong (optional)`);
+    const send = h("button", { type: "button", class: "wrong-send" }, "Send report");
+    const cancel = h("button", { type: "button", class: "wrong-cancel" }, "Cancel");
+    const error = h("p", { class: "wrong-error", role: "alert", hidden: true });
+    cancel.addEventListener("click", close);
+    send.addEventListener("click", async () => {
+      send.disabled = cancel.disabled = field.disabled = true;
+      send.textContent = "Sending…";
+      error.hidden = true;
+      const msg: ReportRequest = { type: "report", analysisId, flag: { type: g.type, quote: quote() }, note: field.value.trim() || undefined };
+      let res: ReportResponse;
+      try {
+        res = ((await chrome.runtime.sendMessage(msg)) as ReportResponse | undefined) ?? { ok: false, message: "Couldn't send it. Please try again." };
+      } catch {
+        res = { ok: false, message: "CheckMate was updated. Reload the page, then try again." };
+      }
+      if (res.ok) return thanks(res.duplicate ? "You already reported this one. Thank you!" : "Thanks! Your report helps CheckMate get better.");
+      send.disabled = cancel.disabled = field.disabled = false;
+      send.textContent = "Send report";
+      error.textContent = res.message;
+      error.hidden = false;
+    });
+    box.replaceChildren(
+      h("p", { class: "wrong-title" }, "Is this flag wrong?"),
+      h("p", { class: "wrong-sub" }, "We'll look at it and use it to improve CheckMate."),
+      field,
+      error,
+      h("div", { class: "wrong-buttons" }, send, cancel)
+    );
+    return field;
+  };
+  link.addEventListener("click", () => {
+    if (!box.hidden) return close();
+    const field = form();
+    box.hidden = false;
+    link.ariaExpanded = "true";
+    field.focus({ preventScroll: true });
+    box.scrollIntoView({ block: "nearest", behavior: "smooth" }); // keep the whole form in view
+  });
+  return { link, box };
 }
 
 // The results: the score, then each heading and flag card dropping in one after another.
@@ -166,7 +228,7 @@ function buildResults(result: AnalyzeResult) {
     const list = groups.filter((g) => g.color === color);
     if (!list.length) continue;
     const heading = hide(h("h3", { class: `${color} drop` }, COLOR_WORDS[color]));
-    const cards = list.map((g) => hide(flagCard(g, firstIndex.get(g.type)!, items, 0)));
+    const cards = list.map((g) => hide(flagCard(g, firstIndex.get(g.type)!, items, 0, result.analysisId)));
     nodes.push(heading, h("ul", {}, ...cards));
     cards.forEach((c, j) => units.push(j === 0 ? [heading, c] : [c]));
   }

@@ -315,6 +315,46 @@ button.show-on-page {
   cursor: pointer;
 }
 button.show-on-page:hover { background: color-mix(in srgb, var(--green) 10%, transparent); }
+.flag-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+button.wrong-link {
+  padding: 4px 2px;
+  font: 500 12px/1.4 var(--font);
+  color: var(--muted);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 3px;
+}
+button.wrong-link:hover, button.wrong-link[aria-expanded="true"] { color: var(--title); text-decoration-color: currentColor; }
+.wrong { margin-top: 10px; padding: 10px 12px 12px; background: var(--soft); border-radius: 12px; animation: wrong-in 0.22s ease-out; }
+@keyframes wrong-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+.wrong-title { margin: 0; font-weight: 600; font-size: 13px; color: var(--title); }
+.wrong-sub { margin: 2px 0 8px; font-size: 12px; color: var(--muted); }
+.wrong-note {
+  display: block;
+  width: 100%;
+  min-height: 52px;
+  padding: 8px 10px;
+  font: 13px/1.45 var(--font);
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  resize: vertical;
+}
+.wrong-note:focus { outline: none; border-color: var(--green-ink); box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18); }
+.wrong-note::placeholder { color: #767676; }
+.wrong-error { margin: 8px 0 0; font-size: 12px; color: var(--red-ink); }
+.wrong-buttons { display: flex; gap: 8px; margin-top: 10px; }
+button.wrong-send, button.wrong-cancel { padding: 6px 13px; font: 600 12px/1.4 var(--font); border-radius: 999px; cursor: pointer; }
+button.wrong-send { color: #fff; background: var(--ink); border: 0; }
+button.wrong-send:disabled { opacity: 0.6; cursor: default; }
+button.wrong-cancel { color: var(--title); background: var(--bg); border: 1px solid var(--line); }
+button.wrong-cancel:disabled { opacity: 0.6; cursor: default; }
+.wrong-done { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 12.5px; font-weight: 500; color: var(--green-ink); }
+.wrong-tick { display: grid; place-items: center; width: 18px; height: 18px; flex: none; font-size: 11px; color: #fff; background: var(--green); border-radius: 50%; }
 .flag-note p { margin: 8px 0 0; }
 .flag-note blockquote {
   margin: 6px 0 0;

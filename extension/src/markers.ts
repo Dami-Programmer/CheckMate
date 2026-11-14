@@ -15,8 +15,15 @@ export interface MarkerItem {
 
 const HOST_ID = "checkmate-markers-host";
 const BTN_H = 30; // button height
-const GAP = 6; // space between stacked buttons
-const FULL_W = 140; // width of the full "Explain simply" pill
+const GAP = 8; // space between stacked buttons
+const FULL_W = 138; // width of the full "Explain simply" pill (matches .mk.side in markers.css)
+// A small lightbulb drawn as SVG (an emoji looks different on every computer).
+function bulb() {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.innerHTML = '<path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1.1 2V17h5v-1.2c.1-.8.5-1.5 1.1-2A6 6 0 0 0 12 3z"/>'; // our own constant
+  return svg;
+}
 let current: { host: HTMLElement; cleanup: () => void; reposition: () => void } | null = null;
 
 // Where the floating CheckMate panel is on screen. The "Explain simply"
@@ -77,7 +84,7 @@ export function showMarkers(items: MarkerItem[]) {
     const btn = h(
       "button",
       { type: "button", class: `mk ${item.color}`, title: `Explain “${item.name}” in simple words`, ariaLabel: `Explain in simple words: ${item.name}`, style: `--i:${buttons.length}` },
-      h("span", { class: "mk-icon", ariaHidden: "true" }, "💡"),
+      h("span", { class: "mk-icon", ariaHidden: "true" }, bulb()),
       h("span", { class: "mk-label" }, "Explain simply")
     );
     btn.addEventListener("click", (e) => {
@@ -116,7 +123,9 @@ export function showMarkers(items: MarkerItem[]) {
       if (!rects.length) return { btn, hidden: true, x: 0, y: 0, side: false };
       const first = rects[0]!;
       const last = rects[rects.length - 1]!;
-      const block = blockOf(range)?.getBoundingClientRect();
+      // A page can mark its text column (the upload page's white card) so buttons sit outside it, not on its edge.
+      const column = blockOf(range)?.closest("[data-cm-column]");
+      const block = (column ?? blockOf(range))?.getBoundingClientRect();
       const textLeft = Math.min(block ? block.left : first.left, ...rects.map((r) => r.left));
       const textRight = Math.max(block ? block.right : last.right, ...rects.map((r) => r.right));
       const firstLineY = first.top + window.scrollY + first.height / 2 - BTN_H / 2;
@@ -125,6 +134,13 @@ export function showMarkers(items: MarkerItem[]) {
       }
       if (side === "right" && pageW - textRight >= FULL_W + 16) {
         return { btn, hidden: false, side: true, x: textRight + 10 + window.scrollX, y: firstLineY };
+      }
+      // A marked column with a narrower margin: a compact round button just outside the column.
+      if (column && side === "left" && textLeft >= BTN_H + 12) {
+        return { btn, hidden: false, side: false, x: textLeft - 8 - BTN_H + window.scrollX, y: firstLineY };
+      }
+      if (column && side === "right" && pageW - textRight >= BTN_H + 12) {
+        return { btn, hidden: false, side: false, x: textRight + 8 + window.scrollX, y: firstLineY };
       }
       // No room in that margin: a compact round 💡 on that side of the clause.
       if (side === "left" && first.left - BTN_H - 4 >= 4) {

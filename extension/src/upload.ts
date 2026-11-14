@@ -129,6 +129,8 @@ function showDoc(doc: DocText) {
   const ext = doc.type === "PDF" ? "PDF" : doc.type === "Word" ? "DOCX" : "TXT";
   const meta = [doc.pages ? `${doc.pages} page${doc.pages === 1 ? "" : "s"}` : "", `${doc.words.toLocaleString()} words`].filter(Boolean).join(" · ");
 
+  const paper = h("article", { class: "paper" }, ...doc.blocks.map((b) => h(b.kind === "h" ? "h2" : "p", {}, b.text)));
+  paper.setAttribute("data-cm-column", ""); // the "Explain simply" buttons line up outside this card
   app.replaceChildren(
     h("header", { class: "top" }, brand()),
     h(
@@ -136,7 +138,7 @@ function showDoc(doc: DocText) {
       { class: "reader" },
       h("section", { class: "doc-head" }, h("span", { class: `ftype ftype-${ext.toLowerCase()}` }, ext), h("div", { class: "doc-id" }, h("p", { class: "doc-name" }, doc.name), h("p", { class: "doc-meta" }, meta)), h("div", { class: "doc-actions" }, again, results)),
       readCheck(doc),
-      h("article", { class: "paper" }, ...doc.blocks.map((b) => h(b.kind === "h" ? "h2" : "p", {}, b.text)))
+      paper
     )
   );
 }
